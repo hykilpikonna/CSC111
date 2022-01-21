@@ -1,0 +1,7 @@
+hypothesis~=6.36.0
+pytest~=6.2.5
+python-ta
+
+requests~=2.27.1
+
+hypy-utils==1.0.2
