@@ -1,6 +1,7 @@
 hypothesis~=6.36.0
 pytest~=6.2.5
 python-ta
+pygame
 
 requests~=2.27.1
 
