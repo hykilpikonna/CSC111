@@ -32,6 +32,13 @@ from a1_linked_list import LinkedList, _Node
 # You should not change SCREEN_SIZE or GRID_SIZE, but may add your own constants underneath.
 SCREEN_SIZE = (800, 800)  # (width, height)
 GRID_SIZE = 8
+PADDING_PX = 10
+
+GRID_WIDTH = SCREEN_SIZE[0] // GRID_SIZE
+GRID_HEIGHT = SCREEN_SIZE[1] // GRID_SIZE
+
+COLOR = (255, 161, 161)
+LINE_WIDTH = 2
 
 
 ################################################################################
@@ -83,6 +90,17 @@ def draw_grid(screen: pygame.Surface) -> None:
     for row in range(1, GRID_SIZE):
         y = row * (height // GRID_SIZE)
         pygame.draw.line(screen, color, (0, y), (width, y))
+
+
+def draw_text_centered(screen: pygame.Surface, text: str, center: tuple[int, int]) -> None:
+    """Draw the given text to the pygame screen at the given position.
+
+    pos represents the center of the text.
+    """
+    font = pygame.font.SysFont('inconsolata', 22)
+    text_surface = font.render(text, True, COLOR)
+    text_rect = text_surface.get_rect(center=center)
+    screen.blit(text_surface, text_rect)
 
 
 ################################################################################
