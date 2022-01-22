@@ -151,6 +151,11 @@ def draw_link(screen: pygame.Surface, start: Tuple[int, int], end: Tuple[int, in
     """
 
 
+def index_to_pos(i: int) -> Tuple[int, int]:
+    xi, yi = i % GRID_SIZE, i // GRID_SIZE
+    return xi * GRID_WIDTH, yi * GRID_WIDTH
+
+
 def draw_three_nodes(screen_size: Tuple[int, int]) -> None:
     """Draw three nodes on a pygame screen of the given size.
 
@@ -170,7 +175,10 @@ def draw_three_nodes(screen_size: Tuple[int, int]) -> None:
 
     # TODO: Complete this function so that it draws the above three nodes and the
     #       links between them and "None". Once you are done, remove this comment.
-    ...
+    draw_grid(screen)
+    draw_node(screen, node1, index_to_pos(0))
+    draw_node(screen, node2, index_to_pos(1))
+    draw_node(screen, node3, index_to_pos(2))
 
     # Don't change the code below (it simply waits until you close the Pygame window)
     pygame.display.flip()
