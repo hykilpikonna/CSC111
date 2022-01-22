@@ -187,6 +187,21 @@ def index_to_pos(i: int) -> Tuple[int, int]:
     xi, yi = i % GRID_SIZE, i // GRID_SIZE
     return xi * GRID_WIDTH, yi * GRID_WIDTH
 
+def pos_to_index(pos: Tuple[int, int]) -> int:
+    """
+    Convert on-screen pixel position to list index
+
+    Preconditions:
+        - 0 <= pos[0] < SCREEN_SIZE[0]
+        - 0 <= pos[1] < SCREEN_SIZE[1]
+
+    :param pos: Position (x, y)
+    :return: Index
+    """
+    x, y = pos
+    x, y = x // GRID_WIDTH, y // GRID_WIDTH
+    return y * GRID_SIZE + x
+
 
 def draw_none(screen: pygame.Surface, i: int) -> None:
     """
@@ -331,6 +346,21 @@ def handle_mouse_click(lst: LinkedList, event: pygame.event.Event,
         - screen_size[0] >= 200
         - screen_size[1] >= 200
     """
+    # Find selected node
+    i = pos_to_index(event.pos)
+
+    # Left click - Remove
+    if event.button == 1:
+        try:
+            lst.pop(i)
+        except IndexError:
+            # When the clicked node doesn't exist, do nothing
+            pass
+
+    # Right-click - Search
+    if event.button == 3:
+        # TODO: Implement this
+        pass
 
 
 if __name__ == '__main__':
