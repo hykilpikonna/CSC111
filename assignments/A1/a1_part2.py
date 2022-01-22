@@ -123,6 +123,21 @@ def draw_node(screen: pygame.Surface, node: _Node, pos: Tuple[int, int]) -> None
     We strongly recommend initializing new constants at the top of this file to represent
     node width, height, and colour.
     """
+    x, y = pos
+    p = PADDING_PX
+
+    # Calculate side length
+    xp, yp = x + p, y + p
+    sl = GRID_WIDTH // 2 - p
+
+    # Draw outer border
+    pygame.draw.rect(screen, COLOR, (xp, yp, sl, sl), LINE_WIDTH)
+
+    # Draw separation line
+    pygame.draw.rect(screen, COLOR, (xp + sl - LINE_WIDTH, yp, sl, sl), LINE_WIDTH)
+
+    # Draw text (centered)
+    draw_text_centered(screen, str(node.item), (xp + sl // 2, yp + sl // 2))
 
 
 def draw_link(screen: pygame.Surface, start: Tuple[int, int], end: Tuple[int, int]) -> None:
