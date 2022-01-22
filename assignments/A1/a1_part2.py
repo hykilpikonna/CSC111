@@ -36,6 +36,7 @@ PADDING_PX = 10
 
 GRID_WIDTH = SCREEN_SIZE[0] // GRID_SIZE
 GRID_HEIGHT = SCREEN_SIZE[1] // GRID_SIZE
+SIDE_LENGTH = GRID_WIDTH // 2 - PADDING_PX
 
 COLOR = (255, 161, 161)
 LINE_WIDTH = 2
@@ -124,11 +125,10 @@ def draw_node(screen: pygame.Surface, node: _Node, pos: Tuple[int, int]) -> None
     node width, height, and colour.
     """
     x, y = pos
-    p = PADDING_PX
+    p, sl = PADDING_PX, SIDE_LENGTH
 
     # Calculate side length
     xp, yp = x + p, y + p
-    sl = GRID_WIDTH // 2 - p
 
     # Draw outer border
     pygame.draw.rect(screen, COLOR, (xp, yp, sl, sl), LINE_WIDTH)
@@ -149,6 +149,19 @@ def draw_link(screen: pygame.Surface, start: Tuple[int, int], end: Tuple[int, in
     The rest of your link can be a simple line; you may, but are not required, to draw an
     arrowhead at the end of the line.
     """
+    sx, sy = start
+    ex, ey = end
+
+    # Calculate position
+    p, sl = PADDING_PX, SIDE_LENGTH
+    sx, sy, ex, ey = sx + p, sy + p, ex + p, ey + p
+
+    # Line's starting point
+    sp = (sx + sl * 1.5 - LINE_WIDTH, sy + sl // 2)
+    ep = (ex, ey + sl // 2)
+
+    pygame.draw.circle(screen, COLOR, sp, 5)
+    pygame.draw.line(screen, COLOR, sp, ep)
 
 
 def index_to_pos(i: int) -> Tuple[int, int]:
@@ -176,9 +189,10 @@ def draw_three_nodes(screen_size: Tuple[int, int]) -> None:
     # TODO: Complete this function so that it draws the above three nodes and the
     #       links between them and "None". Once you are done, remove this comment.
     draw_grid(screen)
-    draw_node(screen, node1, index_to_pos(0))
-    draw_node(screen, node2, index_to_pos(1))
-    draw_node(screen, node3, index_to_pos(2))
+    nodes = [node1, node2, node3]
+    for i in range(3):
+        draw_node(screen, nodes[i], index_to_pos(i))
+        draw_link(screen, index_to_pos(i), index_to_pos(i + 1))
 
     # Don't change the code below (it simply waits until you close the Pygame window)
     pygame.display.flip()
