@@ -160,13 +160,39 @@ def draw_link(screen: pygame.Surface, start: Tuple[int, int], end: Tuple[int, in
     sp = (sx + sl * 1.5 - LINE_WIDTH, sy + sl // 2)
     ep = (ex, ey + sl // 2)
 
+    # Draw
     pygame.draw.circle(screen, COLOR, sp, 5)
     pygame.draw.line(screen, COLOR, sp, ep)
 
 
 def index_to_pos(i: int) -> Tuple[int, int]:
+    """
+    Convert list index to on-screen pixel position
+
+    Preconditions:
+        - i >= 0
+        - i < GRID_SIZE * GRID_SIZE
+
+    :param i: Index
+    :return: Position (x, y)
+    """
     xi, yi = i % GRID_SIZE, i // GRID_SIZE
     return xi * GRID_WIDTH, yi * GRID_WIDTH
+
+
+def draw_none(screen: pygame.Surface, i: int) -> None:
+    """
+    Draw "none" at index i
+
+    Preconditions:
+        - i >= 0
+        - i < GRID_SIZE * GRID_SIZE
+    """
+    p, sl = PADDING_PX, SIDE_LENGTH
+    x, y = index_to_pos(i)
+    x, y = x + p, y + p
+
+    draw_text_centered(screen, "None", (x + sl, y + sl // 2))
 
 
 def draw_three_nodes(screen_size: Tuple[int, int]) -> None:
@@ -193,6 +219,7 @@ def draw_three_nodes(screen_size: Tuple[int, int]) -> None:
     for i in range(3):
         draw_node(screen, nodes[i], index_to_pos(i))
         draw_link(screen, index_to_pos(i), index_to_pos(i + 1))
+    draw_none(screen, 3)
 
     # Don't change the code below (it simply waits until you close the Pygame window)
     pygame.display.flip()
