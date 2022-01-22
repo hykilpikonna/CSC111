@@ -155,14 +155,21 @@ def draw_link(screen: pygame.Surface, start: Tuple[int, int], end: Tuple[int, in
     # Calculate position
     p, sl = PADDING_PX, SIDE_LENGTH
     sx, sy, ex, ey = sx + p, sy + p, ex + p, ey + p
+    hsl = sl // 2
 
     # Line's starting point
-    sp = (sx + sl * 1.5 - LINE_WIDTH, sy + sl // 2)
-    ep = (ex, ey + sl // 2)
+    sp = (sx + sl * 1.5 - LINE_WIDTH, sy + hsl)
+    ep = (ex, ey + hsl)
 
     # Draw
     pygame.draw.circle(screen, COLOR, sp, 5)
-    pygame.draw.line(screen, COLOR, sp, ep)
+    if ex > sx:
+        pygame.draw.line(screen, COLOR, sp, ep)
+
+    # End x is smaller than start x, this happens when the page wraps
+    else:
+        points = [sp, (sp[0], sp[1] + sl), (ep[0] + hsl, sp[1] + sl), (ep[0] + hsl, ep[1] - hsl)]
+        pygame.draw.lines(screen, COLOR, False, points)
 
 
 def index_to_pos(i: int) -> Tuple[int, int]:
@@ -212,9 +219,7 @@ def draw_three_nodes(screen_size: Tuple[int, int]) -> None:
     node1.next = node2
     node2.next = node3
 
-    # TODO: Complete this function so that it draws the above three nodes and the
-    #       links between them and "None". Once you are done, remove this comment.
-    draw_grid(screen)
+    # Draw nodes
     nodes = [node1, node2, node3]
     for i in range(3):
         draw_node(screen, nodes[i], index_to_pos(i))
@@ -257,10 +262,13 @@ def draw_list(screen: pygame.Surface, lst: LinkedList, show_grid: bool = False) 
     curr_index = 0
 
     while curr is not None:
-        ...
+        draw_node(screen, curr, index_to_pos(curr_index))
+        draw_link(screen, index_to_pos(curr_index), index_to_pos(curr_index + 1))
 
         curr = curr.next
         curr_index = curr_index + 1
+
+    draw_none(screen, curr_index)
 
 
 ################################################################################
