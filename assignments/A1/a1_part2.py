@@ -38,7 +38,8 @@ GRID_WIDTH = SCREEN_SIZE[0] // GRID_SIZE
 GRID_HEIGHT = SCREEN_SIZE[1] // GRID_SIZE
 SIDE_LENGTH = GRID_WIDTH // 2 - PADDING_PX
 
-COLOR = (255, 161, 161)
+COLOR = (193, 154, 107)
+COLOR2 = (148, 110, 74)
 LINE_WIDTH = 2
 
 
@@ -162,14 +163,14 @@ def draw_link(screen: pygame.Surface, start: Tuple[int, int], end: Tuple[int, in
     ep = (ex, ey + hsl)
 
     # Draw
-    pygame.draw.circle(screen, COLOR, sp, 5)
+    pygame.draw.circle(screen, COLOR2, sp, 5)
     if ex > sx:
-        pygame.draw.line(screen, COLOR, sp, ep)
+        pygame.draw.line(screen, COLOR2, sp, ep)
 
     # End x is smaller than start x, this happens when the page wraps
     else:
         points = [sp, (sp[0], sp[1] + sl), (ep[0] + hsl, sp[1] + sl), (ep[0] + hsl, ep[1] - hsl)]
-        pygame.draw.lines(screen, COLOR, False, points)
+        pygame.draw.lines(screen, COLOR2, False, points)
 
 
 def index_to_pos(i: int) -> Tuple[int, int]:
@@ -333,14 +334,17 @@ def handle_mouse_click(lst: LinkedList, event: pygame.event.Event,
 
 
 if __name__ == '__main__':
-    import python_ta
-    python_ta.check_all(config={
-        'max-line-length': 100,
-        'disable': ['E1136'],
-        'exclude-protected': ['_first'],
-        'extra-imports': ['random', 'pygame', 'pygame.colordict', 'a1_linked_list'],
-        'generated-members': ['pygame.*']
-    })
+    # draw_three_nodes(SCREEN_SIZE)
+    run_visualization(SCREEN_SIZE, LinkedList)
 
-    import python_ta.contracts
-    python_ta.contracts.check_all_contracts()
+    # import python_ta
+    # python_ta.check_all(config={
+    #     'max-line-length': 100,
+    #     'disable': ['E1136'],
+    #     'exclude-protected': ['_first'],
+    #     'extra-imports': ['random', 'pygame', 'pygame.colordict', 'a1_linked_list'],
+    #     'generated-members': ['pygame.*']
+    # })
+    #
+    # import python_ta.contracts
+    # python_ta.contracts.check_all_contracts()
