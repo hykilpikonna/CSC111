@@ -159,14 +159,15 @@ class CountLinkedList(LinkedList):
             return False
 
         if count > self._first.access_count:
-            node = _CountNode(item, self._first, count)
-            self._first = node  # insert to front
+            self._first = _CountNode(item, self._first, count)  # insert to front
             return True
 
         cur = self._first
-        while cur.next and cur.next.access_count < count:
+        while cur.next and cur.next.access_count >= count:
             cur = cur.next
-        cur.next = _CountNode(item, cur.next.next if cur.next else None, count)  # insert node
+
+        cur.next = _CountNode(item, cur.next, count)  # insert node
+        print(count)
         return True
 
     def append(self, item: Any) -> None:
