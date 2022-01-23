@@ -47,6 +47,20 @@ class MoveToFrontLinkedList(LinkedList):
         >>> linky.to_list()
         [40, 10, 20, 30, 50, 60]
         """
+        if not self._first:
+            return False
+        if self._first.item == item:
+            return True
+        cur = self._first
+        while cur.next:
+            if cur.next.item == item:  # found
+                cur.next = cur.next.next  # delete
+
+                node = _Node(item, self._first)
+                self._first = node  # insert to front
+                return True
+            cur = cur.next
+        return False
 
 
 ################################################################################
@@ -70,6 +84,19 @@ class SwapLinkedList(LinkedList):
         >>> linky.to_list()
         [10, 20, 40, 30, 50, 60]
         """
+        if not self._first:
+            return False
+        if self._first.item == item:
+            return True
+        cur = self._first
+        while cur.next:
+            if cur.next.item == item:  # found
+                temp = cur.item  # swap
+                cur.item = cur.next.item
+                cur.next.item = temp
+                return True
+            cur = cur.next
+        return False
 
 
 ################################################################################
@@ -114,6 +141,48 @@ class CountLinkedList(LinkedList):
         >>> linky.to_list()
         [40, 10, 20, 30, 50, 60]
         """
+        if not self._first:
+            return False
+        if self._first.item == item:
+            self._first.access_count += 1
+            return True
+        count = 0
+        cur = self._first
+        while cur.next:
+            if cur.next.item == item:
+                count = cur.next.access_count + 1
+                cur.next = cur.next.next  # delete node
+                break  # break to prevent huge nesting
+            cur = cur.next
+
+        if count == 0:  # not found
+            return False
+
+        if count > self._first.access_count:
+            node = _CountNode(item, self._first, count)
+            self._first = node  # insert to front
+            return True
+
+        cur = self._first
+        while (not cur.next) or cur.next.access_count < count:
+            cur = cur.next
+        cur.next = _CountNode(item, cur.next.next, count)  # insert node
+
+    def append(self, item: Any) -> None:
+        """Add the given item to the end of this linked list.
+        """
+        new_node = _CountNode(item, None, 0)
+
+        if self._first is None:
+            self._first = new_node
+        else:
+            curr = self._first
+            while curr.next is not None:
+                curr = curr.next
+
+            # After the loop, curr is the last node in the LinkedList.
+            assert curr is not None and curr.next is None
+            curr.next = new_node
 
 
 if __name__ == '__main__':
