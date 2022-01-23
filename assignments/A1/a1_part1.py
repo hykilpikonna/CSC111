@@ -164,9 +164,10 @@ class CountLinkedList(LinkedList):
             return True
 
         cur = self._first
-        while (not cur.next) or cur.next.access_count < count:
+        while cur.next and cur.next.access_count < count:
             cur = cur.next
-        cur.next = _CountNode(item, cur.next.next, count)  # insert node
+        cur.next = _CountNode(item, cur.next.next if cur.next else None, count)  # insert node
+        return True
 
     def append(self, item: Any) -> None:
         """Add the given item to the end of this linked list.

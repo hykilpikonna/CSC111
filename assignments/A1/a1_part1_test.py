@@ -28,5 +28,13 @@ import pytest
 from a1_part1 import MoveToFrontLinkedList, SwapLinkedList, CountLinkedList
 
 
+def test_all_lists_true() -> None:
+    movetofront = [MoveToFrontLinkedList(range(i)) for i in range(100)]
+    swap = [SwapLinkedList(range(i)) for i in range(100)]
+    count = [CountLinkedList(range(i)) for i in range(100)]
+    assert(all(all(x in movetofront[i] for x in range(i)) for i in range(100)))
+    assert(all(all(x in swap[i] for x in range(i)) for i in range(100)))
+    assert(all(all(x in count[i] for x in range(i)) for i in range(100)))
+
 if __name__ == '__main__':
     pytest.main(['a1_part1_test.py', '-v'])
