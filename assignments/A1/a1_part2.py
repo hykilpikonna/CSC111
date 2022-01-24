@@ -187,19 +187,24 @@ def index_to_pos(i: int) -> Tuple[int, int]:
     xi, yi = i % GRID_SIZE, i // GRID_SIZE
     return xi * GRID_WIDTH, yi * GRID_WIDTH
 
-def pos_to_index(pos: Tuple[int, int]) -> int:
+
+def pos_to_index(pos: Tuple[int, int], screen_size: tuple[int, int] = SCREEN_SIZE) -> int:
     """
     Convert on-screen pixel position to list index
 
     Preconditions:
-        - 0 <= pos[0] < SCREEN_SIZE[0]
-        - 0 <= pos[1] < SCREEN_SIZE[1]
+        - 0 <= pos[0] < screen_size[0]
+        - 0 <= pos[1] < screen_size[1]
 
     :param pos: Position (x, y)
+    :param screen_size: Screen size (width, height)
     :return: Index
     """
+    w = screen_size[0] // GRID_SIZE
+    h = screen_size[1] // GRID_SIZE
+
     x, y = pos
-    x, y = x // GRID_WIDTH, y // GRID_WIDTH
+    x, y = x // w, y // h
     return y * GRID_SIZE + x
 
 
@@ -347,7 +352,7 @@ def handle_mouse_click(lst: LinkedList, event: pygame.event.Event,
         - screen_size[1] >= 200
     """
     # Find selected node
-    i = pos_to_index(event.pos)
+    i = pos_to_index(event.pos, screen_size)
 
     # Left click - Remove
     if event.button == 1:
@@ -359,22 +364,23 @@ def handle_mouse_click(lst: LinkedList, event: pygame.event.Event,
 
     # Right-click - Search
     if event.button == 3:
-        # TODO: Implement this
-        pass
+        lst.__contains__(lst[i])
 
 
 if __name__ == '__main__':
     # draw_three_nodes(SCREEN_SIZE)
-    run_visualization(SCREEN_SIZE, LinkedList)
+    # run_visualization(SCREEN_SIZE, MoveToFrontLinkedList)
 
-    # import python_ta
-    # python_ta.check_all(config={
-    #     'max-line-length': 100,
-    #     'disable': ['E1136'],
-    #     'exclude-protected': ['_first'],
-    #     'extra-imports': ['random', 'pygame', 'pygame.colordict', 'a1_linked_list'],
-    #     'generated-members': ['pygame.*']
-    # })
-    #
-    # import python_ta.contracts
-    # python_ta.contracts.check_all_contracts()
+    import python_ta
+
+    python_ta.check_all(config={
+        'max-line-length': 100,
+        'disable': ['E1136'],
+        'exclude-protected': ['_first'],
+        'extra-imports': ['random', 'pygame', 'pygame.colordict', 'a1_linked_list'],
+        'generated-members': ['pygame.*']
+    })
+
+    import python_ta.contracts
+
+    python_ta.contracts.check_all_contracts()
