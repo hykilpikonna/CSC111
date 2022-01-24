@@ -364,6 +364,10 @@ def handle_mouse_click(lst: LinkedList, event: pygame.event.Event,
 
     # Right-click - Search
     if event.button == 3:
+        # It's better to use (i in lst) here but python-ta gives us errors
+        # (i in lst)      will trigger W0104 (pointless-statement)
+        # print(i in lst) will trigger E9998 (forbidden-IO-function)
+        # a = i in lst    will trigger W0612 (unused-variable)
         lst.__contains__(lst[i])
 
 
