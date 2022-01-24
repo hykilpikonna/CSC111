@@ -113,6 +113,12 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Latex build files
+*.aux
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
 # Custom
 .idea
 CSC111.iml
