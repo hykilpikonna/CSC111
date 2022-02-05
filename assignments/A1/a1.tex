@@ -2,9 +2,11 @@
 \usepackage{amsmath}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=0.75in]{geometry}
+\usepackage{amsfonts}
+\usepackage{amssymb}
 
 \title{CSC111 Assignment 1: Linked Lists}
-\author{Azalea Gui \& Peter Lin}
+\author{Azalea Gui and Peter Lin}
 \date{\today}
 
 \begin{document}
@@ -26,14 +28,27 @@ Do \textbf{not} include your solution in this file.
 \begin{enumerate}
 
     \item[(a)]
-    TODO: Write your answer here.
+    Let $n, m \in \mathbb Z^+$. Because \texttt{\_\_contains\_\_} doesn't mutate the \texttt{LinkedList}, each function call is independent from each other. Therefore, we can just find the total running time of one call to \texttt{\_\_contains\_\_} and multiply it with $m$.\\
+    Because $n - 1$ is the $n^{th}$ element in the \texttt{LinkedList}, the loop must iterate $n$ times. Everything else other than the loop are constant time operations and can be counted as 1.
+    So the total running time is $m(n + 1) = nm + m$ or $\Theta(nm + m)$.
 
     \item[(b)]
-    TODO: Write your answer here.
+    The first search operation moves the element to the front, and because that's the only one being searched for, it will stay there for the rest of the searches. So the first search takes $n$ iterations and some constant time, while the rest of the searches are constant time because it will be the first element. Therefore the total running time is $n + m + 1$ or $\Theta(n + m)$.\\
+
+    The second search operation moves the element closer to the beginning by 1 element. So if $m < n$, the number of loop iterations is $n + (n - 1) + ... + (n - m + 1) = \frac{m(2n - m + 1)}{2}$, adding constant time operations to be a total running time of $\frac{m(2n - m + 3)}{2}$ or $\Theta(m(2n - m))$. Because $n < 2n - m \leq 2n$, this is also $\Theta(mn)$.\\
+
+    If $m \geq n$, then there will be constant time searches as the element will already be at the very beginning. So the total number of loop iterations is $\frac{n(n + 1)}{2}$, adding constant time operations to get a total running time of $\frac{n(n + 1)}{2} + m$ or $\Theta(n^2 + m)$.\\
+
+    The last search operation is equivalent to the first. Because all elements start with a count of 0, the first search will bring the element to the beginning with $n$ loop iterations, and every other search becomes constant time. Therefore the answer is the same as the first search operation, having a total running time of $n + m + 1$ or $\Theta(n + m)$.
 \end{enumerate}
 
 \item[4.]
-TODO: Write your answer here.
+Assume $n > 3$. Also assume $m > n$.
+Consider a sequence $[n - 1, n - 2, ..., 0, n - 1, n - 2, ...]$. Each time a search is performed in the \texttt{MoveToFrontLinkedList}, it must iterate to the last element each time. However, the \texttt{SwapLinkedList} does not have to do that. The first 2 times it will access the $n^{th}$ element, however the next 2 times it will access the $n-2^{th}$, and the next 2 will access the $n-4^{th}$, etc.\\
+
+Thus the total running time for \texttt{MoveToFrontLinkedList} is $T_1 = mn$ and the total running time for \texttt{SwapLinkedList} is $T_2 = n + n + (n - 2) + (n - 2) + ...$. Then $T_1 - T_2 = 0 + 0 + 2 + 2 + 4 + 4 + ... + 0 + 0 + 2 + ...$. Each element of this sum is less than $n$, and there are $m$ elements in the sum. Thus $T_1 - T_2 \in \mathcal O(mn)$.\\
+
+To find a lower bound, first find the running time for searching $n$ elements. This would be $0 + 0 + 2 + 2 + ... + n - 4 + n - 4 + n - 2$ if $n$ is odd, and $0 + 0 + 2 + 2 + ... + n - 2 + n - 2$ if $n$ is even. If $n$ is even, then the sum is $n\frac{n - 2}{2}$. If $n$ is odd, then $n - 1$ is even, therefore $(n - 1)\frac{n - 3}{2}$ is a lower bound. Let $L = (n - 1)\frac{n - 3}{2}$ be this lower bound. Now consider a sequence very similar to $T_1 - T_2$, $T_3 = 0 + 0 + ... + L + 0 + 0 + ... + L + 0 + ...$, where the first $n - 1$ elements are 0 and the next element is $L$, and then it repeats. The partial sum of $T_3$ is smaller or equal to the partial sum for $T_2 - T_1$, so this is a lower bound for $T_1 - T_2$. Also, $T_3 \in \Omega (m\frac{L}{n})$, because $m > n$, a constant factor of $\frac{1}{2}$ can be chosen, and then $T_3$ will always be greater or equal to $m\frac{L}{2n}$. So $T_1 - T_2 \in \Omega (m\frac{L}{n}) = \Omega (m\frac{(n - 1)(n - 3)}{n} = \Omega (mn)$. Therefore $T_1 - T_2 \in \Theta (mn)$.
 
 \end{enumerate}
 

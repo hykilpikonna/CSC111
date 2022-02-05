@@ -167,7 +167,6 @@ class CountLinkedList(LinkedList):
             cur = cur.next
 
         cur.next = _CountNode(item, cur.next, count)  # insert node
-        print(count)
         return True
 
     def append(self, item: Any) -> None:
