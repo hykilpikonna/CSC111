@@ -300,10 +300,22 @@ class Compare(Expr):
         ...            ('<=', Num(4.5))])
         >>> expr.evaluate()
         False
+        >>> expr = Compare(Num(1), [
+        ...            ('<=', Num(4.5)),
+        ...            ('<=', Num(2)),
+        ...            ('<', Num(4.5))])
+        >>> expr.evaluate()
+        False
         """
         left = self.left.evaluate()
-        return all((left < c[1].evaluate() if c[0] == '<' else left <= c[1].evaluate())
-                   for c in self.comparisons)
+        for c in self.comparisons:
+            v = c[1].evaluate()
+            if c[0] == '<' and left >= v:
+                return False
+            if c[0] == '<=' and left > v:
+                return False
+            left = v
+        return True
 
     def __str__(self) -> str:
         """Return a string representation of this comparison expression.
