@@ -129,7 +129,7 @@ class RandomTreePlayer(a2_minichess.Player):
         """
         # 1. First it updates its game tree to the subtree corresponding to the move made by its
         #    opponent. If no subtree is found, its game tree is set to None.
-        if previous_move:
+        if previous_move and self._game_tree:
             self._game_tree = self._game_tree.find_subtree_by_move(previous_move)
 
         # 2. The player picks its move based on the following conditions:
@@ -165,6 +165,10 @@ def part1_runner(games_file: str, n: int, black_random: bool) -> None:
         - Your implementation MUST correctly call a2_minichess.run_games. You may choose
           the values for the optional arguments passed to the function.
     """
+    tree = load_game_tree(games_file)
+    white = RandomTreePlayer(tree)
+    black = a2_minichess.RandomPlayer() if black_random else white
+    a2_minichess.run_games(n, white, black, show_stats=True)
 
 
 if __name__ == '__main__':
@@ -177,4 +181,4 @@ if __name__ == '__main__':
     })
 
     # Sample call to part1_runner (you can change this, just keep it in the main block!)
-    # part1_runner('data/white_wins.csv', 50, True)
+    part1_runner('data/white_wins.csv', 50, True)
