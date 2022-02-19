@@ -135,7 +135,44 @@ class GameTree:
               ii) First reverse the list, and then use a recursive helper method that calls
                  `list.pop` on the list of moves. Just make sure the original list isn't changed
                  when the function ends!
+
+        >>> game_tree = GameTree()
+        >>> # Test duplicates:
+        >>> game_tree.add_subtree(GameTree('a2b3', False))
+        >>> game_tree.insert_move_sequence(['a2b3'])
+        >>> len(game_tree.get_subtrees())
+        1
+        >>> game_tree.insert_move_sequence(['c2d3', 'd4d3', 'd2c3'])
+        >>> game_tree.insert_move_sequence(['c2d3', 'd4d3', 'b1d3'])
+        >>> len(game_tree.get_subtrees())
+        2
+        >>> sub1 = game_tree.find_subtree_by_move('c2d3')
+        >>> len(sub1.get_subtrees())
+        1
+        >>> sub2 = sub1.find_subtree_by_move('d4d3')
+        >>> len(sub2.get_subtrees())
+        2
+        >>> sub3 = sub2.find_subtree_by_move('d2c3')
+        >>> sub3.get_subtrees()
+        []
         """
+        self.insert_move_sequence_helper(moves, 0)
+
+    def insert_move_sequence_helper(self, moves: list[str], index: int) -> None:
+        # All moves inserted, finish
+        if index == len(moves):
+            return
+
+        # Next root already exists
+        for c in self._subtrees:
+            if c.move == moves[index]:
+                c.insert_move_sequence_helper(moves, index + 1)
+                return
+
+        # Next root doesn't exist
+        sub = GameTree(moves[index], not self.is_white_move)
+        self.add_subtree(sub)
+        sub.insert_move_sequence_helper(moves, index + 1)
 
     ############################################################################
     # Part 2: Complete Game Trees and Win Probabilities
