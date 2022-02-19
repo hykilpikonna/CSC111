@@ -33,13 +33,20 @@ class GameTree:
       - move: the current chess move (expressed in chess notation), or '*' if this tree
               represents the start of a game
       - is_white_move: True if White is to make the next move after this, False otherwise
+      - white_win_probability: 0-1 value of the probability that white will win from the current
+                               state of the game, assuming that white always chooses the move that
+                               leads to the subtree with the highest win probability, and black
+                               always chooses a random subtree.
 
     Representation Invariants:
         - self.move == GAME_START_MOVE or self.move is a valid Minichess move
         - self.move != GAME_START_MOVE or self.is_white_move == True
+        - 0 <= self.white_win_probability <= 1
     """
     move: str
     is_white_move: bool
+
+    white_win_probability: float
 
     # Private Instance Attributes:
     #  - _subtrees:
@@ -48,7 +55,7 @@ class GameTree:
     _subtrees: list[GameTree]
 
     def __init__(self, move: str = GAME_START_MOVE,
-                 is_white_move: bool = True) -> None:
+                 is_white_move: bool = True, white_win_probability: float = 0.0) -> None:
         """Initialize a new game tree.
 
         Note that this initializer uses optional arguments, as illustrated below.
@@ -58,10 +65,13 @@ class GameTree:
         True
         >>> game.is_white_move
         True
+        >>> game.white_win_probability
+        0.0
         """
         self.move = move
         self.is_white_move = is_white_move
         self._subtrees = []
+        self.white_win_probability = white_win_probability
 
     def get_subtrees(self) -> list[GameTree]:
         """Return the subtrees of this game tree."""
