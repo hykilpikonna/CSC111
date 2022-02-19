@@ -75,14 +75,21 @@ def generate_complete_game_tree(root_move: str, game_state: a2_minichess.Miniche
     >>> g.make_move('b2c3')
     >>> g.make_move('b3c4')
     >>> t = generate_complete_game_tree('b3c4', g, 3)
+    >>> t.white_win_probability
+    1.0
     >>> len(t.get_subtrees())
     9
     >>> t = t.find_subtree_by_move('b1a2')
     >>> len(t.get_subtrees())
     0
+    >>> t.white_win_probability
+    1.0
+    >>> t = generate_complete_game_tree('*', g, 4)
+    >>> t.white_win_probability
+    1.0
     """
     tree = a2_game_tree.GameTree(root_move, game_state.is_white_move(),
-                                 int(game_state.get_winner() == 'White'))
+                                 float(game_state.get_winner() == 'White'))
 
     # Base case
     if d == 0:
