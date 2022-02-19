@@ -81,7 +81,8 @@ def generate_complete_game_tree(root_move: str, game_state: a2_minichess.Miniche
     >>> len(t.get_subtrees())
     0
     """
-    tree = a2_game_tree.GameTree(root_move, game_state.is_white_move())
+    tree = a2_game_tree.GameTree(root_move, game_state.is_white_move(),
+                                 int(game_state.get_winner() == 'White'))
 
     # Base case
     if d == 0:
