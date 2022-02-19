@@ -25,8 +25,6 @@ from typing import Optional
 
 import a2_game_tree
 import a2_minichess
-from a2_game_tree import GameTree
-from a2_minichess import MinichessGame
 
 
 ################################################################################
@@ -100,10 +98,10 @@ class RandomTreePlayer(a2_minichess.Player):
         Preconditions:
             - There is at least one valid move for the given game
 
-        >>> t = GameTree()
+        >>> t = a2_game_tree.GameTree()
         >>> t.insert_move_sequence(['c2d3', 'd4d3', 'd2c3'])
         >>> t.insert_move_sequence(['c2d3', 'd4d3', 'b1d3'])
-        >>> g = MinichessGame()
+        >>> g = a2_minichess.MinichessGame()
         >>> p = RandomTreePlayer(t)
         >>> p.make_move(g, None)
         'c2d3'
@@ -129,15 +127,15 @@ class RandomTreePlayer(a2_minichess.Player):
         >>> p._game_tree is None
         True
         """
-        # 1. First it updates its game tree to the subtree corresponding to the move made by its opponent.
-        #    If no subtree is found, its game tree is set to None.
+        # 1. First it updates its game tree to the subtree corresponding to the move made by its
+        #    opponent. If no subtree is found, its game tree is set to None.
         if previous_move:
             self._game_tree = self._game_tree.find_subtree_by_move(previous_move)
 
         # 2. The player picks its move based on the following conditions:
 
-        # If its game tree is None or is just a leaf with no subtrees, it picks a random move from all
-        # valid moves from the game, like RandomPlayer.
+        # If its game tree is None or is just a leaf with no subtrees, it picks a random move from
+        # all valid moves from the game, like RandomPlayer.
         if self._game_tree is None or len(self._game_tree.get_subtrees()) == 0:
             move = random.choice(game.get_valid_moves())
 
