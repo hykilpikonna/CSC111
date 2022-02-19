@@ -55,7 +55,32 @@ def generate_complete_game_tree(root_move: str, game_state: a2_minichess.Miniche
 
     WARNING: we recommend not calling this function with depth greater than 6, as this will
     likely take a very long time on your computer.
+
+    >>> g = a2_minichess.MinichessGame()
+    >>> str(generate_complete_game_tree('*', g, 0)).strip()
+    "* -> White's move"
+    >>> t = generate_complete_game_tree('*', g, 2)
+    >>> {sub.move for sub in t.get_subtrees()} == {'a2b3', 'b2c3', 'b2a3', 'c2d3', 'c2b3', 'd2c3'}
+    True
+    >>> t: a2_game_tree.GameTree = t.find_subtree_by_move('c2d3')
+    >>> len(t.get_subtrees())
+    1
+    >>> t.get_subtrees()[0].move
+    'd4d3'
     """
+    tree = a2_game_tree.GameTree(root_move, game_state.is_white_move())
+
+    # Base case
+    if d == 0:
+        return tree
+
+    # Add all valid moves
+    for move in game_state.get_valid_moves():
+        # Recursive step
+        next_tree = generate_complete_game_tree(move, game_state.copy_and_make_move(move), d - 1)
+        tree.add_subtree(next_tree)
+
+    return tree
 
 
 class GreedyTreePlayer(a2_minichess.Player):
