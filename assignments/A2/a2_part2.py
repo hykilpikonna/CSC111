@@ -78,8 +78,8 @@ def generate_complete_game_tree(root_move: str, game_state: a2_minichess.Miniche
     >>> len(t.get_subtrees())
     9
     >>> t = t.find_subtree_by_move('b1a2')
-    >>> [sub.move for sub in t.get_subtrees()]
-    []
+    >>> len(t.get_subtrees())
+    0
     """
     tree = a2_game_tree.GameTree(root_move, game_state.is_white_move())
 
