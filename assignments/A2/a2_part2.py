@@ -62,11 +62,24 @@ def generate_complete_game_tree(root_move: str, game_state: a2_minichess.Miniche
     >>> t = generate_complete_game_tree('*', g, 2)
     >>> {sub.move for sub in t.get_subtrees()} == {'a2b3', 'b2c3', 'b2a3', 'c2d3', 'c2b3', 'd2c3'}
     True
-    >>> t: a2_game_tree.GameTree = t.find_subtree_by_move('c2d3')
+    >>> t = t.find_subtree_by_move('c2d3')
     >>> len(t.get_subtrees())
     1
     >>> t.get_subtrees()[0].move
     'd4d3'
+    >>> g = a2_minichess.MinichessGame()
+    >>> g.make_move('a2b3')
+    >>> g.make_move('b4b3')
+    >>> g.make_move('c2b3')
+    >>> g.make_move('c4b3')
+    >>> g.make_move('b2c3')
+    >>> g.make_move('b3c4')
+    >>> t = generate_complete_game_tree('b3c4', g, 3)
+    >>> len(t.get_subtrees())
+    9
+    >>> t = t.find_subtree_by_move('b1a2')
+    >>> [sub.move for sub in t.get_subtrees()]
+    []
     """
     tree = a2_game_tree.GameTree(root_move, game_state.is_white_move())
 
