@@ -173,15 +173,14 @@ class GameTree:
         if index == len(moves):
             return
 
-        # Next root already exists
-        for c in self._subtrees:
-            if c.move == moves[index]:
-                c.insert_move_sequence_helper(moves, index + 1)
-                return
+        sub = self.find_subtree_by_move(moves[index])
 
-        # Next root doesn't exist
-        sub = GameTree(moves[index], not self.is_white_move)
-        self.add_subtree(sub)
+        # Create subtree if not exist
+        if not sub:
+            sub = GameTree(moves[index], not self.is_white_move)
+            self.add_subtree(sub)
+
+        # Insert move
         sub.insert_move_sequence_helper(moves, index + 1)
 
     ############################################################################
