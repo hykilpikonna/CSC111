@@ -166,9 +166,9 @@ class GameTree:
         >>> sub3.get_subtrees()
         []
         """
-        self.insert_move_sequence_helper(moves, 0)
+        self._insert_move_sequence_helper(moves, 0)
 
-    def insert_move_sequence_helper(self, moves: list[str], index: int) -> None:
+    def _insert_move_sequence_helper(self, moves: list[str], index: int) -> None:
         # All moves inserted, finish
         if index == len(moves):
             return
@@ -181,7 +181,7 @@ class GameTree:
             self.add_subtree(sub)
 
         # Insert move
-        sub.insert_move_sequence_helper(moves, index + 1)
+        sub._insert_move_sequence_helper(moves, index + 1)
 
     ############################################################################
     # Part 2: Complete Game Trees and Win Probabilities
