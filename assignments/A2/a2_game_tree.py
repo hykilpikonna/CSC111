@@ -91,6 +91,7 @@ class GameTree:
     def add_subtree(self, subtree: GameTree) -> None:
         """Add a subtree to this game tree."""
         self._subtrees.append(subtree)
+        self._update_white_win_probability()
 
     def __str__(self) -> str:
         """Return a string representation of this tree.
@@ -118,7 +119,7 @@ class GameTree:
     ############################################################################
     # Part 1: Loading and "Replaying" Minichess games
     ############################################################################
-    def insert_move_sequence(self, moves: list[str]) -> None:
+    def insert_move_sequence(self, moves: list[str], white_win_probability: float = 0.0) -> None:
         """Insert the given sequence of moves into this tree.
 
         The inserted moves form a chain of descendants, where:
@@ -166,9 +167,10 @@ class GameTree:
         >>> sub3.get_subtrees()
         []
         """
-        self._insert_move_sequence_helper(moves, 0)
+        self._insert_move_sequence_helper(moves, 0, white_win_probability)
 
-    def _insert_move_sequence_helper(self, moves: list[str], index: int) -> None:
+    def _insert_move_sequence_helper(self, moves: list[str], index: int,
+                                     white_win_probability: float) -> None:
         # All moves inserted, finish
         if index == len(moves):
             return
@@ -177,11 +179,11 @@ class GameTree:
 
         # Create subtree if not exist
         if not sub:
-            sub = GameTree(moves[index], not self.is_white_move)
+            sub = GameTree(moves[index], not self.is_white_move, white_win_probability)
             self.add_subtree(sub)
 
         # Insert move
-        sub._insert_move_sequence_helper(moves, index + 1)
+        sub._insert_move_sequence_helper(moves, index + 1, white_win_probability)
 
     ############################################################################
     # Part 2: Complete Game Trees and Win Probabilities
@@ -201,6 +203,20 @@ class GameTree:
             - if self is not a leaf and self.is_white_move is False, the white win probability
               is equal to the AVERAGE of the white win probabilities of its subtrees
         """
+        # if self is a leaf, don't change the white win probability
+        if not self._subtrees:
+            return
+
+        # if self is not a leaf and self.is_white_move is True, the white win probability
+        # is equal to the MAXIMUM of the white win probabilities of its subtrees
+        if self.is_white_move:
+            self.white_win_probability = max(s.white_win_probability for s in self._subtrees)
+
+        # if self is not a leaf and self.is_white_move is False, the white win probability
+        # is equal to the AVERAGE of the white win probabilities of its subtrees
+        else:
+            self.white_win_probability = sum(s.white_win_probability for s in self._subtrees) /\
+                                         len(self._subtrees)
 
 
 if __name__ == '__main__':
