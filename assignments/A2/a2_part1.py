@@ -25,6 +25,8 @@ from typing import Optional
 
 import a2_game_tree
 import a2_minichess
+from a2_game_tree import GameTree
+from a2_minichess import MinichessGame
 
 
 ################################################################################
@@ -97,7 +99,57 @@ class RandomTreePlayer(a2_minichess.Player):
 
         Preconditions:
             - There is at least one valid move for the given game
+
+        >>> t = GameTree()
+        >>> t.insert_move_sequence(['c2d3', 'd4d3', 'd2c3'])
+        >>> t.insert_move_sequence(['c2d3', 'd4d3', 'b1d3'])
+        >>> g = MinichessGame()
+        >>> p = RandomTreePlayer(t)
+        >>> p.make_move(g, None)
+        'c2d3'
+        >>> p._game_tree.move
+        'c2d3'
+        >>> len(p._game_tree.get_subtrees())
+        1
+        >>> g.make_move('c2d3')
+        >>> g.make_move('d4d3')
+        >>> m = p.make_move(g, 'd4d3')
+        >>> m in ['d2c3', 'b1d3']
+        True
+        >>> p._game_tree.move == m
+        True
+        >>> len(p._game_tree.get_subtrees())
+        0
+        >>> g.make_move(m)
+        >>> m = random.choice(g.get_valid_moves())
+        >>> g.make_move(m)
+        >>> m = p.make_move(g, m)
+        >>> m in g.get_valid_moves()
+        True
+        >>> p._game_tree is None
+        True
         """
+        # 1. First it updates its game tree to the subtree corresponding to the move made by its opponent.
+        #    If no subtree is found, its game tree is set to None.
+        if previous_move:
+            self._game_tree = self._game_tree.find_subtree_by_move(previous_move)
+
+        # 2. The player picks its move based on the following conditions:
+
+        # If its game tree is None or is just a leaf with no subtrees, it picks a random move from all
+        # valid moves from the game, like RandomPlayer.
+        if self._game_tree is None or len(self._game_tree.get_subtrees()) == 0:
+            move = random.choice(game.get_valid_moves())
+
+        # Otherwise, it picks a random move from among its game tree’s subtrees.
+        else:
+            move = random.choice(self._game_tree.get_subtrees()).move
+
+        # Update tree
+        if self._game_tree:
+            self._game_tree = self._game_tree.find_subtree_by_move(move)
+
+        return move
 
 
 def part1_runner(games_file: str, n: int, black_random: bool) -> None:
