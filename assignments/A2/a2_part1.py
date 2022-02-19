@@ -38,7 +38,25 @@ def load_game_tree(games_file: str) -> a2_game_tree.GameTree:
 
     Implementation hints:
         - You can review Tutorial 4 for how we read CSV files in Python.
+
+    >>> gt = load_game_tree('data/small_sample.csv')
+    >>> [sub.move for sub in gt.get_subtrees()]
+    ['a2b3', 'b2c3', 'b2a3', 'c2d3', 'c2b3', 'd2c3']
+    >>> gt = gt.find_subtree_by_move('c2d3')
+    >>> [sub.move for sub in gt.get_subtrees()]
+    ['d4d3']
+    >>> gt = gt.get_subtrees()[0]
+    >>> len(gt.get_subtrees())
+    2
     """
+    tree = a2_game_tree.GameTree()
+
+    with open(games_file, 'r', newline='', encoding='UTF-8') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            tree.insert_move_sequence(row)
+
+    return tree
 
 
 ################################################################################
