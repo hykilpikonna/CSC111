@@ -112,7 +112,15 @@ def run_learning_algorithm(exploration_probabilities: list[float],
     # Play games using the ExploringPlayer and update the GameTree after each one
     results_so_far = []
 
-    # Write your loop here, according to the description above.
+    # Loop through each probability, play games
+    for exp_prob in exploration_probabilities:
+        # Run game
+        winner, seq = a2_minichess.run_game(ExploringPlayer(game_tree, exp_prob),
+                                            a2_minichess.RandomPlayer())
+        # After the game, insert move sequence with white win probability
+        game_tree.insert_move_sequence(seq, float(winner == 'White'))
+        # Print progress
+        print(f'Winner: {winner}')
 
     if show_stats:
         a2_minichess.plot_game_statistics(results_so_far)
