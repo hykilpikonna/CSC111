@@ -132,10 +132,12 @@ class GreedyTreePlayer(a2_minichess.Player):
         Preconditions:
             - There is at least one valid move for the given game
         """
-        # 1. First it updates its game tree to the subtree corresponding to the move made by its
-        #    opponent. If no subtree is found, its game tree is set to None.
-        if previous_move:
+        # Tree has been explored, make a random choice
+        if self._game_tree and previous_move:
             self._game_tree = self._game_tree.find_subtree_by_move(previous_move)
+
+        if self._game_tree is None or len(self._game_tree.get_subtrees()) == 0:
+            return random.choice(game.get_valid_moves())
 
         # 2. The player picks its move
         subtrees = self._game_tree.get_subtrees()
@@ -145,8 +147,7 @@ class GreedyTreePlayer(a2_minichess.Player):
             subtree = min(subtrees, key=lambda x: x.white_win_probability)
 
         # Update tree
-        if self._game_tree:
-            self._game_tree = subtree
+        self._game_tree = subtree
 
         return subtree.move
 
@@ -167,20 +168,27 @@ def part2_runner(d: int, n: int, white_greedy: bool) -> None:
         - Your implementation MUST correctly call a2_minichess.run_games. You may choose
           the values for the optional arguments passed to the function.
     """
-    tree = load_game_tree(games_file)
-    white = RandomTreePlayer(tree)
-    black = a2_minichess.RandomPlayer() if black_random else white
+    greedy = GreedyTreePlayer(generate_complete_game_tree('*', a2_minichess.MinichessGame(), d))
+    rand = a2_minichess.RandomPlayer()
+
+    if white_greedy:
+        white = greedy
+        black = rand
+    else:
+        white = rand
+        black = greedy
+
     a2_minichess.run_games(n, white, black, show_stats=True)
 
 
 if __name__ == '__main__':
-    import python_ta
-    python_ta.check_all(config={
-        'max-line-length': 100,
-        'max-nested-blocks': 4,
-        'disable': ['E1136'],
-        'extra-imports': ['random', 'a2_minichess', 'a2_game_tree']
-    })
+    # import python_ta
+    # python_ta.check_all(config={
+    #     'max-line-length': 100,
+    #     'max-nested-blocks': 4,
+    #     'disable': ['E1136'],
+    #     'extra-imports': ['random', 'a2_minichess', 'a2_game_tree']
+    # })
 
     # Sample call to part2_runner (you can change this, just keep it in the main block!)
-    # part2_runner(5, 50, False)
+    part2_runner(5, 50, True)
