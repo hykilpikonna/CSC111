@@ -136,7 +136,9 @@ def part3_runner() -> a2_game_tree.GameTree:
     We encourage you to experiment with different exploration probability sequences
     to see how quickly you can develop a "winning" GameTree!
     """
-    probabilities = [0.0] * 700
+    # probabilities = [1 - (i / 1200) for i in range(1200)]
+    # probabilities = [0.75] * 400 + [0.4] * 400 + [0.2] * 300 + [0] * 100
+    probabilities = [0.4] * 500 + [0.2] * 300 + [0.1] * 500 + [0] * 100
 
     return run_learning_algorithm(probabilities)
 
