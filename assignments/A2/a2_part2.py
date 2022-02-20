@@ -154,6 +154,27 @@ class GreedyTreePlayer(a2_minichess.Player):
         return move
 
 
+class WinningPlayer(a2_minichess.Player):
+    """A Minichess player that computes tree before every move, computationally heavier but wins
+    almost every time
+    """
+
+    def make_move(self, game: a2_minichess.MinichessGame, previous_move: Optional[str]) -> str:
+        """Make a move given the current game. Since this is only a demo, it only supports white
+        player.
+
+        previous_move is the black player's most recent move, or None if no moves have been made.
+
+        Preconditions:
+            - There is at least one valid move for the given game
+        """
+        if not previous_move:
+            previous_move = '*'
+
+        tree = generate_complete_game_tree(previous_move, game, 3)
+        return max(tree.get_subtrees(), key=lambda x: x.white_win_probability).move
+
+
 def part2_runner(d: int, n: int, white_greedy: bool) -> None:
     """Create a complete game tree with the given depth, and run n games where
     one player is a GreedyTreePlayer and the other is a RandomPlayer.
