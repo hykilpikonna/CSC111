@@ -50,6 +50,31 @@ class ExploringPlayer(a2_minichess.Player):
         Preconditions:
             - There is at least one valid move for the given game
         """
+        if self._game_tree and previous_move:
+            self._game_tree = self._game_tree.find_subtree_by_move(previous_move)
+
+        # Tree has been explored, make a random choice
+        if self._game_tree is None or len(self._game_tree.get_subtrees()) == 0 :
+            move = random.choice(game.get_valid_moves())
+
+        # "If the random number is < p, the player chooses a random move from among all valid moves
+        # for the current game state"
+        elif random.random() < self._exploration_probability:
+            move = random.choice(game.get_valid_moves())
+
+        # The player picks its move
+        else:
+            subtrees = self._game_tree.get_subtrees()
+            if game.is_white_move():
+                move = max(subtrees, key=lambda x: x.white_win_probability).move
+            else:
+                move = min(subtrees, key=lambda x: x.white_win_probability).move
+
+        # Update tree
+        if self._game_tree:
+            self._game_tree = self._game_tree.find_subtree_by_move(move)
+
+        return move
 
 
 def run_learning_algorithm(exploration_probabilities: list[float],
