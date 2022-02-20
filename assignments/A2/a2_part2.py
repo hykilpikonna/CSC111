@@ -132,6 +132,23 @@ class GreedyTreePlayer(a2_minichess.Player):
         Preconditions:
             - There is at least one valid move for the given game
         """
+        # 1. First it updates its game tree to the subtree corresponding to the move made by its
+        #    opponent. If no subtree is found, its game tree is set to None.
+        if previous_move:
+            self._game_tree = self._game_tree.find_subtree_by_move(previous_move)
+
+        # 2. The player picks its move
+        subtrees = self._game_tree.get_subtrees()
+        if game.is_white_move():
+            subtree = max(subtrees, key=lambda x: x.white_win_probability)
+        else:
+            subtree = min(subtrees, key=lambda x: x.white_win_probability)
+
+        # Update tree
+        if self._game_tree:
+            self._game_tree = subtree
+
+        return subtree.move
 
 
 def part2_runner(d: int, n: int, white_greedy: bool) -> None:
@@ -150,6 +167,10 @@ def part2_runner(d: int, n: int, white_greedy: bool) -> None:
         - Your implementation MUST correctly call a2_minichess.run_games. You may choose
           the values for the optional arguments passed to the function.
     """
+    tree = load_game_tree(games_file)
+    white = RandomTreePlayer(tree)
+    black = a2_minichess.RandomPlayer() if black_random else white
+    a2_minichess.run_games(n, white, black, show_stats=True)
 
 
 if __name__ == '__main__':
