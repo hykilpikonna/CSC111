@@ -205,13 +205,13 @@ def part2_runner(d: int, n: int, white_greedy: bool) -> None:
 
 
 if __name__ == '__main__':
-    # import python_ta
-    # python_ta.check_all(config={
-    #     'max-line-length': 100,
-    #     'max-nested-blocks': 4,
-    #     'disable': ['E1136'],
-    #     'extra-imports': ['random', 'a2_minichess', 'a2_game_tree']
-    # })
+    import python_ta
+    python_ta.check_all(config={
+        'max-line-length': 100,
+        'max-nested-blocks': 4,
+        'disable': ['E1136'],
+        'extra-imports': ['random', 'a2_minichess', 'a2_game_tree']
+    })
 
     # Sample call to part2_runner (you can change this, just keep it in the main block!)
     part2_runner(5, 50, True)

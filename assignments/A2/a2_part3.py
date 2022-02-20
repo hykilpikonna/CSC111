@@ -54,7 +54,7 @@ class ExploringPlayer(a2_minichess.Player):
             self._game_tree = self._game_tree.find_subtree_by_move(previous_move)
 
         # Tree has been explored, make a random choice
-        if self._game_tree is None or len(self._game_tree.get_subtrees()) == 0 :
+        if self._game_tree is None or len(self._game_tree.get_subtrees()) == 0:
             move = random.choice(game.get_valid_moves())
 
         # "If the random number is < p, the player chooses a random move from among all valid moves
@@ -119,6 +119,7 @@ def run_learning_algorithm(exploration_probabilities: list[float],
                                             a2_minichess.RandomPlayer())
         # After the game, insert move sequence with white win probability
         game_tree.insert_move_sequence(seq, float(winner == 'White'))
+        results_so_far.append(winner)
         # Print progress
         print(f'Winner: {winner}')
 
