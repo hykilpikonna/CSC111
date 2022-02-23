@@ -103,13 +103,9 @@ class GameTree:
 
         The indentation level is specified by the <depth> parameter.
         """
-        if self.is_white_move:
-            turn_desc = "White's move"
-        else:
-            turn_desc = "Black's move"
-        move_desc = f'{self.move} -> {turn_desc}\n'
-        s = '  ' * depth + move_desc
-        if self._subtrees == []:
+        move_desc = f'{self.move}-{self.white_win_probability}\n'
+        s = '| ' * depth + move_desc
+        if not self._subtrees:
             return s
         else:
             for subtree in self._subtrees:
@@ -220,14 +216,6 @@ class GameTree:
 
 
 if __name__ == '__main__':
-    import python_ta.contracts
-    python_ta.contracts.check_all_contracts()
-
-    import doctest
-    doctest.testmod()
-
-    import python_ta
-    python_ta.check_all(config={
-        'max-line-length': 100,
-        'disable': ['E1136'],
-    })
+    g = GameTree()
+    g.insert_move_sequence(['a1b1', 'a2b1'], 1.0)
+    print(g)

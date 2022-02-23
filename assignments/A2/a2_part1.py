@@ -181,4 +181,4 @@ if __name__ == '__main__':
     })
 
     # Sample call to part1_runner (you can change this, just keep it in the main block!)
-    part1_runner('data/white_wins.csv', 50, True)
+    part1_runner('data/white_wins.csv', 50, False)
