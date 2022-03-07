@@ -211,8 +211,33 @@ class _Vertex:
             2. This method must be recursive, and will have an implicit base case:
                when all vertices in self.neighbours are already in visited.
             3. Use a loop accumulator to store a set of the vertices connected to self.
+
+        >>> g = Graph()
+        >>> for i in range(0, 7):
+        ...     g.add_vertex(i)
+        >>> g.add_edge(0, 1)
+        >>> g.add_edge(1, 2)
+        >>> g.add_edge(1, 3)
+        >>> g.add_edge(2, 3)
+        >>> g.get_connected_component(1) == {0, 1, 2, 3}
+        True
+        >>> g.add_edge(4, 0)
+        >>> g.get_connected_component(0) == {0, 1, 2, 3, 4}
+        True
+        >>> g.get_connected_component(5)
+        {5}
+        >>> g._vertices[5].get_connected_component({g._vertices[5]})
+        set()
+        >>> g._vertices[6].get_connected_component(set())
+        {6}
         """
-        # TODO: implement this method
+        if self in visited:
+            return set()
+        visited.add(self)
+        nums = {self.item}
+        for u in self.neighbours:
+            nums = nums.union(u.get_connected_component(visited))
+        return nums
 
 
 if __name__ == '__main__':
