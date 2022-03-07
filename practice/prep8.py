@@ -122,7 +122,7 @@ class Graph:
             by a path that doesn't use v.
 
         >>> g = Graph()
-        >>> for i in range(0, 4):
+        >>> for i in range(0, 5):
         ...     g.add_vertex(i)
         >>> g.add_edge(0, 1)
         >>> g.add_edge(1, 2)
@@ -132,6 +132,9 @@ class Graph:
         True
         >>> g.in_cycle(0)
         False
+        >>> g.add_edge(4, 0)
+        >>> g.in_cycle(0)
+        False
 
         Implementation notes:
             1. This method should call _Vertex.check_connected (following the above
@@ -139,7 +142,21 @@ class Graph:
             2. Don't try to make this method recursive, or copy and paste the implementation
                of _Vertex.check_connected! That's not necessary here.
         """
-        # TODO: implement this method
+        # Does not exist
+        if item not in self._vertices:
+            return False
+        v = self._vertices[item]
+
+        # Combinations
+        for u in v.neighbours:
+            for w in v.neighbours:
+                # Distinct combinations
+                if u == w or u == v or w == v:
+                    continue
+
+                if u.check_connected(w.item, {v}):
+                    return True
+        return False
 
 
 class _Vertex:
