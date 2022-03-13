@@ -70,6 +70,11 @@ class _Vertex:
 
         See Assignment handout for definition of similarity score.
         """
+        if self.degree() == 0 or other.degree() == 0:
+            return 0.0
+        intersection = len(self.neighbours.intersection(other.neighbours))
+        union = len(self.neighbours) + len(other.neighbours) - intersection  # inclusion-exclusion
+        return intersection / union
 
 
 class Graph:
@@ -195,6 +200,9 @@ class Graph:
         >>> g.get_similarity_score('0', '1')
         0.5
         """
+        if item1 not in self._vertices or item2 not in self._vertices:
+            raise ValueError
+        return self._vertices[item1].similarity_score(self._vertices[item2])
 
     ############################################################################
     # Part 1, Q4
@@ -222,6 +230,14 @@ class Graph:
             - self._vertices[book].kind == 'book'
             - limit >= 1
         """
+        book = self._vertices[book]  # vertex is more useful here
+        books = set(book.neighbours)  # all books 1 <= distance <= 2 away from self
+        for neighbour in book.neighbours:
+            books.update(neighbour.neighbours)
+        books.remove(book)
+        arr = [(book.similarity_score(x), x.item) for x in books]
+        arr = sorted(arr, reverse=True)[:limit]
+        return [x[1] for x in arr]
 
 
 ################################################################################
@@ -256,6 +272,19 @@ def load_review_graph(reviews_file: str, book_names_file: str) -> Graph:
     >>> "Harry Potter and the Sorcerer's Stone (Book 1)" in user1_reviews
     True
     """
+    g = Graph()
+    mp = {}  # maps book ID to book name
+    with open(book_names_file, 'r', newline='', encoding='UTF-8') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            mp[row[0]] = row[1]
+    with open(reviews_file, 'r', newline='', encoding='UTF-8') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            g.add_vertex(row[0], 'user')
+            g.add_vertex(mp[row[1]], 'book')
+            g.add_edge(row[0], mp[row[1]])
+    return g
 
 
 if __name__ == '__main__':
