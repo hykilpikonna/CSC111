@@ -84,8 +84,24 @@ def min_index(lst: list) -> int:
 
     >>> min_index([-10, 7, 3, 5])
     0
+    >>> min_index([7, 7, 7, 7])
+    0
+    >>> min_index([8, 7, 7, 7])
+    1
+    >>> min_index([8, 7, 7, -1])
+    3
+    >>> min_index([99999999])
+    0
     """
-    # TODO: implement this function
+    min = lst[0]
+    index = 0
+
+    for i in range(len(lst)):
+        if lst[i] < min:
+            min = lst[i]
+            index = i
+
+    return index
 
 
 def min_index_sublist(lst: list, b: int, e: int) -> int:
