@@ -120,7 +120,15 @@ def min_index_sublist(lst: list, b: int, e: int) -> int:
     >>> min_index_sublist([-10, 7, 3, 5], 1, 3)
     2
     """
-    # TODO: implement this function
+    min = lst[b]
+    index = b
+
+    for i in range(b, e):
+        if lst[i] < min:
+            min = lst[i]
+            index = i
+
+    return index
 
 
 def cycle(lst: list) -> None:
