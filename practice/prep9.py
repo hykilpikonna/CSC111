@@ -148,7 +148,10 @@ def cycle(lst: list) -> None:
         - Do NOT call any list methods; instead, move the elements by assigning to indexes
           (e.g., lst[1] = list[0] or lst[i] = lst[i + 1]).
     """
-    # TODO: implement this function
+    last = lst[-1]
+    for i in reversed(range(len(lst))):
+        lst[i] = lst[i - 1]
+    lst[0] = last
 
 
 def cycle_sublist(lst: list, b: int, e: int) -> None:
@@ -168,7 +171,10 @@ def cycle_sublist(lst: list, b: int, e: int) -> None:
     >>> lst2
     [10, 7, 3, 5, 9000]
     """
-    # TODO: implement this function
+    last = lst[e - 1]
+    for i in reversed(range(b, e)):
+        lst[i] = lst[i - 1]
+    lst[b] = last
 
 
 if __name__ == '__main__':
