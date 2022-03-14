@@ -66,8 +66,12 @@ def is_sorted_sublist(lst: list, b: int, e: int) -> bool:
     False
     >>> is_sorted_sublist([2, 7, 3, 4, 5], 2, 5)  # Equivalent to is_sorted([2, 7, 3, 4, 5][2:5])
     True
+    >>> is_sorted_sublist([-1, 0, 0, -1], 0, 3)
+    True
+    >>> is_sorted_sublist([-1, 0, 0, -1], 0, 4)
+    False
     """
-    # TODO: implement this function
+    return all(lst[i] <= lst[i + 1] for i in range(b, e - 1))
 
 
 def min_index(lst: list) -> int:
