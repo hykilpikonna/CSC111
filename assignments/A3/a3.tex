@@ -4,8 +4,15 @@
 \usepackage[margin=0.75in]{geometry}
 
 \title{CSC111 Assignment 3: Graphs, Recommender Systems, and Clustering}
-\author{TODO: FILL IN THE NAME OF EACH OF YOUR GROUP MEMBERS HERE}
+\author{Azalea Gui \& Peter Lin}
 \date{\today}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\code}[1]{\texttt{#1}}
 
 \begin{document}
 \maketitle
@@ -19,7 +26,17 @@ Complete this part in the provided \texttt{a3\_part1.py} starter file.
 Do \textbf{not} include your solution in this file.
 
 \item[2.]
-TODO: Write your answer here.
+Running Time Analysis for \texttt{load\_review\_graph}:
+
+Let $n$ be the number of lines in \texttt{book\_names\_file}, let $m$ be the number of lines in \texttt{reviews\_file}.
+
+There are two operations that involves iteration in the function, one reads the book names file and creates the \texttt{mp} dictionary, and the other one reads the reviews file and adds vertices to the graph.
+
+In creating $mp$, the program first opened the file and created a \texttt{csv.reader}, which are both constant-time operations. Then, the dictionary comprehension statement loops through all $n$ lines, running only constant-time operations in each iteration for adding the book id and name pair into the dictionary, resulting in a running time of $\Theta(n)$. Summing up all the operations for creating $mp$ and ignoring constant-time operations, the running time would be $\in \Theta(n)$.
+
+For adding the vertices, it also opened the file and created a \texttt{csv.reader} in constant time. Then, the loop iterates through all $m$ lines. In each iteration, two vertices and one edge are added, and it also accessed $mp$ to retrieve the book name, which are all constant time operations. Therefore, the total running time would be contained by $\in \Theta(m)$.
+
+Since there are only constant-time operations outside the two iterating operations, the total running time of the function would be $\in \Theta(m + n)$
 
 \item[3.]
 Complete this part in the provided \texttt{a3\_part1.py} starter file.
