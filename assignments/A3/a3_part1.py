@@ -19,7 +19,7 @@ This file is Copyright (c) 2022 Mario Badr, David Liu, and Isaac Waller.
 """
 from __future__ import annotations
 import csv
-from typing import Any
+from typing import Any, Literal
 
 # Make sure you've installed the necessary Python libraries (see assignment handout
 # "Installing new libraries" section)
@@ -143,7 +143,7 @@ class Graph:
         else:
             raise ValueError
 
-    def get_all_vertices(self, kind: str = '') -> set:
+    def get_all_vertices(self, kind: Literal['', 'user', 'book'] = '') -> set:
         """Return a set of all vertex items in this graph.
 
         If kind != '', only return the items of the given vertex kind.

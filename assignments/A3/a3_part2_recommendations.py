@@ -20,7 +20,7 @@ This file is Copyright (c) 2022 Mario Badr, David Liu, and Isaac Waller.
 """
 from __future__ import annotations
 import csv
-from typing import Any, Union
+from typing import Any, Union, Literal
 
 from a3_part1 import Graph
 
@@ -175,7 +175,7 @@ class WeightedGraph(Graph):
     # Part 2, Q2
     ############################################################################
     def get_similarity_score(self, item1: Any, item2: Any,
-                             score_type: str = 'unweighted') -> float:
+                             score_type: Literal['unweighted', 'strict'] = 'unweighted') -> float:
         """Return the similarity score between the two given items in this graph.
 
         score_type is one of 'unweighted' or 'strict', corresponding to the
@@ -194,7 +194,7 @@ class WeightedGraph(Graph):
         return self._vertices[item1].similarity_score_strict(self._vertices[item2])
 
     def recommend_books(self, book: str, limit: int,
-                        score_type: str = 'unweighted') -> list[str]:
+                        score_type: Literal['unweighted', 'strict'] = 'unweighted') -> list[str]:
         """Return a list of up to <limit> recommended books based on similarity to the given book.
 
         score_type is one of 'unweighted' or 'strict', corresponding to the

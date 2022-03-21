@@ -18,8 +18,9 @@ please consult our Course Syllabus.
 This file is Copyright (c) 2022 Mario Badr, David Liu, and Isaac Waller.
 """
 import random
+from typing import Literal
 
-from a3_part2_recommendations import WeightedGraph, load_weighted_review_graph
+from a3_part2_recommendations import WeightedGraph
 
 
 ################################################################################
@@ -27,7 +28,7 @@ from a3_part2_recommendations import WeightedGraph, load_weighted_review_graph
 ################################################################################
 def create_book_graph(review_graph: WeightedGraph,
                       threshold: float = 0.05,
-                      score_type: str = 'unweighted') -> WeightedGraph:
+                      score_type: Literal['unweighted', 'strict'] = 'unweighted') -> WeightedGraph:
     """Return a book graph based on the given review_graph.
 
     The score_type parameter plays the same role as in WeightedGraph.get_similarity_score.
@@ -46,6 +47,28 @@ def create_book_graph(review_graph: WeightedGraph,
     Preconditions:
         - score_type in {'unweighted', 'strict'}
     """
+    # Add all books as vertices
+    book_graph = WeightedGraph()
+    book_names: set[str] = review_graph.get_all_vertices('book')
+    for b in book_names:
+        book_graph.add_vertex(b, 'book')
+
+    # Add all edges
+    for b1 in book_names:
+        for b2 in book_names:
+            if b1 == b2:
+                continue
+
+            # Calculate similarity score
+            score = review_graph.get_similarity_score(b1, b2, score_type)
+            if score <= threshold:
+                continue
+
+            # Add edge
+            book_graph.add_edge(b1, b2, score)
+
+    # Done
+    return book_graph
 
 
 ################################################################################
@@ -60,7 +83,21 @@ def cross_cluster_weight(book_graph: WeightedGraph, cluster1: set, cluster2: set
         - cluster1 != set() and cluster2 != set()
         - cluster1.isdisjoint(cluster2)
         - Every item in cluster1 and cluster2 is a vertex in book_graph
+
+    >>> bg = WeightedGraph()
+    >>> for b in range(4): \
+            bg.add_vertex(f'B{b}', 'book')
+    >>> bg.add_edge('B0', 'B1', .5)
+    >>> bg.add_edge('B0', 'B2', .4)
+    >>> bg.add_edge('B1', 'B2', .3)
+    >>> bg.get_weight('B0', 'B1')
+    0.5
+    >>> cross_cluster_weight(bg, {'B0', 'B1'}, {'B2', 'B3'}) == (.4 + .3) / 4
+    True
     """
+    numerator = sum(book_graph.get_weight(v1, v2) for v1 in cluster1 for v2 in cluster2)
+    denominator = len(cluster1) * len(cluster2)
+    return numerator / denominator
 
 
 ################################################################################
@@ -151,3 +188,16 @@ if __name__ == '__main__':
         'allowed-io': ['find_clusters_greedy', 'find_clusters_random'],
         'max-nested-blocks': 4
     })
+
+    # Q1 Test
+    # review_graph = load_weighted_review_graph('data/reviews_full.csv', 'data/book_names.csv')
+    # book_graph = create_book_graph(review_graph, 0.03)
+    # from a3_visualization import visualize_graph
+    # visualize_graph(book_graph)
+
+    # Q3 Test
+    # review_graph = load_weighted_review_graph('data/reviews_full.csv', 'data/book_names.csv')
+    # book_graph = create_book_graph(review_graph, threshold=0.01, score_type='strict')
+    # clusters = find_clusters_random(book_graph, 15)
+    # from a3_visualization import visualize_graph_clusters
+    # visualize_graph_clusters(book_graph, clusters)
