@@ -34,7 +34,7 @@ There are two operations that involves iteration in the function, one reads the 
 
 In creating $mp$, the program first opened the file and created a \texttt{csv.reader}, which are both constant-time operations. Then, the dictionary comprehension statement loops through all $n$ lines, running only constant-time operations in each iteration for adding the book id and name pair into the dictionary, resulting in a running time of $\Theta(n)$. Summing up all the operations for creating $mp$ and ignoring constant-time operations, the running time would be $\in \Theta(n)$.
 
-For adding the vertices, it also opened the file and created a \texttt{csv.reader} in constant time. Then, the loop iterates through all $m$ lines. In each iteration, two vertices and one edge are added, and it also accessed $mp$ to retrieve the book name, which are all constant time operations. Therefore, the total running time would be contained by $\in \Theta(m)$.
+For adding the vertices, it also opened the file and created a \texttt{csv.reader} in constant time. Then, the loop iterates through all $m$ lines. In each iteration, two vertices and one edge are added, and it also accessed $mp$ to retrieve the book name, which are all constant time operations. Therefore, the total running time would be $\in \Theta(m)$.
 
 Since there are only constant-time operations outside the two iterating operations, the total running time of the function would be $\in \Theta(m + n)$
 
@@ -71,7 +71,14 @@ Do \textbf{not} include your solution in this file.
 
 \begin{enumerate}
 \item[(a)]
-TODO: Write your answer here.
+Running Time Analysis for \texttt{cross\_cluster\_weight}:
+
+Let $m_1$ be the size of \texttt{cluster1}, and let $m_2$ be the size of \texttt{cluster2}.
+
+There is one nested loop in the function. The inner loop iterates $m_2$ times through all values in \texttt{cluster2}, and the outer loop iterates $m_1$ times through all values in \texttt{cluster1}. Inside the inner loop, there is only one function call \texttt{get\_weight}, which is constant-time because it only involves constant-time operations like dictionary accessing and variable assignment. After the function call, the returned value is added to \texttt{sw}, which is one constant-time operation. Let $c$ be a constant representing the number of constant time operations inside the inner loop. The nested loop will run $m_1 * m_2 * c$ operations in total, which is $\in \Theta(m_1 * m_2)$
+
+Since there are only constant-time operations such as \texttt{len(set)}, variable assignment, and multiplication or division outside the nested loop, the running time of the function will be $\in \Theta(m_1 * m_2)$
+
 
 \item[(b)]
 TODO: Write your answer here.

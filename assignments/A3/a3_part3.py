@@ -95,9 +95,13 @@ def cross_cluster_weight(book_graph: WeightedGraph, cluster1: set, cluster2: set
     >>> cross_cluster_weight(bg, {'B0', 'B1'}, {'B2', 'B3'}) == (.4 + .3) / 4
     True
     """
-    numerator = sum(book_graph.get_weight(v1, v2) for v1 in cluster1 for v2 in cluster2)
-    denominator = len(cluster1) * len(cluster2)
-    return numerator / denominator
+    # sw = sum(book_graph.get_weight(v1, v2) for v1 in cluster1 for v2 in cluster2)
+    sw = 0
+    for v1 in cluster1:
+        for v2 in cluster2:
+            sw += book_graph.get_weight(v1, v2)
+
+    return sw / (len(cluster1) * len(cluster2))
 
 
 ################################################################################
