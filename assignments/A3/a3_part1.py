@@ -229,6 +229,21 @@ class Graph:
             - book in self._vertices
             - self._vertices[book].kind == 'book'
             - limit >= 1
+
+        >>> my_graph = load_review_graph('data/reviews_full.csv', 'data/book_names.csv')
+        >>> title = "Harry Potter and the Sorcerer's Stone (Book 1)"
+        >>> import pprint
+        >>> pprint.pprint(my_graph.recommend_books(title, 10))
+        ['The Casual Vacancy',
+         'Harry Potter and the Chamber of Secrets',
+         'Harry Potter and the Prisoner of Azkaban',
+         'Harry Potter and the Chamber of Secrets, Book 2',
+         'Harry Potter and the Deathly Hallows, Book 7',
+         'Harry Potter And The Goblet Of Fire',
+         'Harry Potter And The Order Of The Phoenix',
+         'Harry Potter and the Half-Blood Prince (Book 6)',
+         "The Cuckoo's Calling (Cormoran Strike)",
+         'Fellowship of the Ring (Lord of the Rings Part 1)']
         """
         book = self._vertices[book]  # vertex is more useful here
         books = set()  # all books distance == 2 away from self

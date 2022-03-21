@@ -257,17 +257,23 @@ def load_weighted_review_graph(reviews_file: str, book_names_file: str) -> Weigh
           format described on the assignment handout
     """
     g = WeightedGraph()
-    mp = {}  # maps book ID to book name
+
+    # mp[book_id] = book_name
+    mp: dict[str, str]
+
+    # Read book names file and create id-name mapping
     with open(book_names_file, 'r', newline='', encoding='UTF-8') as f:
         reader = csv.reader(f)
-        for row in reader:
-            mp[row[0]] = row[1]
+        mp = {book_id: name for book_id, name in reader}
+
+    # Read user review file and link user and reviews in the graph
     with open(reviews_file, 'r', newline='', encoding='UTF-8') as f:
         reader = csv.reader(f)
-        for row in reader:
-            g.add_vertex(row[0], 'user')
-            g.add_vertex(mp[row[1]], 'book')
-            g.add_edge(row[0], mp[row[1]], row[2])
+        for user_id, book_id, rating in reader:
+            g.add_vertex(user_id, 'user')
+            g.add_vertex(mp[book_id], 'book')
+            g.add_edge(user_id, mp[book_id], int(rating))
+
     return g
 
 
