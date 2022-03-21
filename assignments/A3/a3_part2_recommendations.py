@@ -74,12 +74,27 @@ class _WeightedVertex:
         similarity score for _Vertex (from Part 1). That is, just look at edges,
         and ignore the weights.
         """
+        if self.degree() == 0 or other.degree() == 0:
+            return 0.0
+        a = set(self.neighbours.keys())
+        b = set(other.neighbours.keys())
+        intersection = len(a.intersection(b))
+        union = len(a) + len(b) - intersection  # inclusion-exclusion
+        return intersection / union
 
     def similarity_score_strict(self, other: _WeightedVertex) -> float:
         """Return the strict weighted similarity score between this vertex and other.
 
         See Assignment handout for details.
         """
+        if self.degree() == 0 or other.degree() == 0:
+            return 0.0
+        a = set(self.neighbours.keys())
+        b = set(other.neighbours.keys())
+        generator = (x for x in a if x in b and x.neighbours[self] == x.neighbours[other])
+        intersection = sum(1 for _ in generator)
+        union = len(a.union(b))
+        return intersection / union
 
 
 class WeightedGraph(Graph):
@@ -172,6 +187,11 @@ class WeightedGraph(Graph):
         Preconditions:
             - score_type in {'unweighted', 'strict'}
         """
+        if item1 not in self._vertices or item2 not in self._vertices:
+            raise ValueError
+        if score_type == 'unweighted':
+            return self._vertices[item1].similarity_score_unweighted(self._vertices[item2])
+        return self._vertices[item1].similarity_score_strict(self._vertices[item2])
 
     def recommend_books(self, book: str, limit: int,
                         score_type: str = 'unweighted') -> list[str]:
@@ -203,6 +223,22 @@ class WeightedGraph(Graph):
             - limit >= 1
             - score_type in {'unweighted', 'strict'}
         """
+        book = self._vertices[book]  # vertex is more useful here
+        books = set()  # all books distance == 2 away from self
+        for neighbour in book.neighbours:
+            books.update(neighbour.neighbours.keys())
+        books.remove(book)
+        arr = []
+        for x in books:
+            if score_type == 'strict':
+                score = book.similarity_score_strict(x)
+                if score == 0:
+                    continue
+            else:
+                score = book.similarity_score_unweighted(x)
+            arr.append((score, x.item))
+        arr = sorted(arr, reverse=True)[:limit]
+        return [x[1] for x in arr]
 
 
 ################################################################################
@@ -220,6 +256,19 @@ def load_weighted_review_graph(reviews_file: str, book_names_file: str) -> Weigh
         - book_names_file is the path to a CSV file corresponding to the book data
           format described on the assignment handout
     """
+    g = WeightedGraph()
+    mp = {}  # maps book ID to book name
+    with open(book_names_file, 'r', newline='', encoding='UTF-8') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            mp[row[0]] = row[1]
+    with open(reviews_file, 'r', newline='', encoding='UTF-8') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            g.add_vertex(row[0], 'user')
+            g.add_vertex(mp[row[1]], 'book')
+            g.add_edge(row[0], mp[row[1]], row[2])
+    return g
 
 
 if __name__ == '__main__':
@@ -233,11 +282,11 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
 
-    import python_ta
-    python_ta.check_all(config={
-        'max-line-length': 1000,
-        'disable': ['E1136', 'W0221'],
-        'extra-imports': ['csv', 'a3_part1'],
-        'allowed-io': ['load_weighted_review_graph'],
-        'max-nested-blocks': 4
-    })
+    # import python_ta
+    # python_ta.check_all(config={
+    #     'max-line-length': 1000,
+    #     'disable': ['E1136', 'W0221'],
+    #     'extra-imports': ['csv', 'a3_part1'],
+    #     'allowed-io': ['load_weighted_review_graph'],
+    #     'max-nested-blocks': 4
+    # })

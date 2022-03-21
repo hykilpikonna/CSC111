@@ -231,7 +231,7 @@ class Graph:
             - limit >= 1
         """
         book = self._vertices[book]  # vertex is more useful here
-        books = set(book.neighbours)  # all books 1 <= distance <= 2 away from self
+        books = set()  # all books distance == 2 away from self
         for neighbour in book.neighbours:
             books.update(neighbour.neighbours)
         books.remove(book)
