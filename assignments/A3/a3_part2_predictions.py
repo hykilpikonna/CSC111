@@ -154,6 +154,22 @@ class SimilarUserPredictor(ReviewScorePredictor):
             - user in self.graph._vertices
             - book in self.graph._vertices
         """
+        if self.graph.adjacent(user, book):  # if the user already made a review, use that score
+            return self.graph.get_weight(user, book)
+        users = self.graph.get_neighbours(book)
+        total_weighted = 0
+        total = 0
+        all_zero = True
+        for u in users:
+            weight = self.graph.get_similarity_score(u, book, 'strict')
+            score = self.graph.get_weight(u, book)
+            if weight > 0:
+                all_zero = False
+            total_weighted += score * weight
+            total += score
+        if all_zero:
+            return round(total / len(users))
+        return round(total_weighted / len(users))
 
 
 ################################################################################
@@ -184,11 +200,26 @@ def evaluate_predictor(predictor: ReviewScorePredictor,
         - all users and books in test_file are in predictor.graph
           format described on the assignment handout
     """
-
+    num_reviews = 0
+    num_correct = 0
+    total_error = 0
+    mp: dict[str, str]  # maps book ID to book name
+    with open(book_names_file, 'r', newline='', encoding='UTF-8') as f:
+        reader = csv.reader(f)
+        mp = dict(reader)
+    with open(test_file, 'r', newline='', encoding='UTF-8') as f:
+        reader = csv.reader(f)
+        for book, user, score in reader:
+            book = mp[book]
+            num_reviews += 1
+            actual = predictor.predict_review_score(user, book)
+            if actual == score:
+                num_correct += 1
+            total_error += abs(score - actual)
     return {
-        'num_reviews': ...,
-        'num_correct': ...,
-        'average_error': ...,
+        'num_reviews': num_reviews,
+        'num_correct': num_correct,
+        'average_error': total_error / num_reviews,
     }
 
 
@@ -207,4 +238,4 @@ if __name__ == '__main__':
         'extra-imports': ['csv', 'a3_part2_recommendations'],
         'allowed-io': ['evaluate_predictor'],
         'max-nested-blocks': 4
-    })
+    }, output='pyta_report.html')
