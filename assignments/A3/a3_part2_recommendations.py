@@ -238,7 +238,7 @@ class WeightedGraph(Graph):
                 score = book.similarity_score_unweighted(x)
             arr.append((score, x.item))
         arr = sorted(arr, reverse=True)[:limit]
-        return [x[1] for x in arr]
+        return [y[1] for y in arr]
 
 
 ################################################################################
@@ -264,7 +264,7 @@ def load_weighted_review_graph(reviews_file: str, book_names_file: str) -> Weigh
     # Read book names file and create id-name mapping
     with open(book_names_file, 'r', newline='', encoding='UTF-8') as f:
         reader = csv.reader(f)
-        mp = {book_id: name for book_id, name in reader}
+        mp = dict(reader)
 
     # Read user review file and link user and reviews in the graph
     with open(reviews_file, 'r', newline='', encoding='UTF-8') as f:
@@ -288,11 +288,11 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
 
-    # import python_ta
-    # python_ta.check_all(config={
-    #     'max-line-length': 1000,
-    #     'disable': ['E1136', 'W0221'],
-    #     'extra-imports': ['csv', 'a3_part1'],
-    #     'allowed-io': ['load_weighted_review_graph'],
-    #     'max-nested-blocks': 4
-    # })
+    import python_ta
+    python_ta.check_all(config={
+        'max-line-length': 1000,
+        'disable': ['E1136', 'W0221'],
+        'extra-imports': ['csv', 'a3_part1'],
+        'allowed-io': ['load_weighted_review_graph'],
+        'max-nested-blocks': 4
+    })

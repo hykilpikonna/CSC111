@@ -295,7 +295,7 @@ def load_review_graph(reviews_file: str, book_names_file: str) -> Graph:
     # Read book names file and create id-name mapping
     with open(book_names_file, 'r', newline='', encoding='UTF-8') as f:
         reader = csv.reader(f)
-        mp = {book_id: name for book_id, name in reader}
+        mp = dict(reader)
 
     # Read user review file and link user and reviews in the graph
     with open(reviews_file, 'r', newline='', encoding='UTF-8') as f:

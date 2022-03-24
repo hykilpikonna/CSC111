@@ -238,4 +238,4 @@ if __name__ == '__main__':
         'extra-imports': ['csv', 'a3_part2_recommendations'],
         'allowed-io': ['evaluate_predictor'],
         'max-nested-blocks': 4
-    }, output='pyta_report.html')
+    })
