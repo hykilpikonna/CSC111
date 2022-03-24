@@ -81,10 +81,34 @@ Since there are only constant-time operations such as \texttt{len(set)}, variabl
 
 
 \item[(b)]
-TODO: Write your answer here.
+Running Time Analysis for the inner loop in \texttt{find\_clusters\_random}:
+
+Let $n$ be the number of vertices of \texttt{graph}.
+
+There is one nested loop in the function.
+
+For iteration $i$ of the outer loop, the inner loop iterates through all books in the \texttt{clusters} array, which has $n - i$ entires since each iteration of the outer loop removes an entry at the end. Inside the inner loop, the \texttt{if}, \texttt{is not}, comparisons, and variable assignment operations are all constant-time. For iteration $j$ of the inner loop, the \texttt{cross\_cluster\_weight} function call inside the inner loop has a running time of $\Theta(m_1 * m_j)$ as previously analyzed, where $m_1$ is the size of cluster $c_1$, and $m_j$ is the size of cluster $c_j$ (or $c_2$ for iteration $j$). Therefore, the running time of the function will be: 
+
+
+\begin{align}
+RT_{\text{inner\_loop}} &= \sum_j^{n-i} m_1 * m_j \\
+&= m_1 * \sum_j^{n-i} m_j
+\end{align}
+
+Since the if statement inside the inner loop ensures $m_1 \neq m_j$, and since we know that $\sum_c |c| = n$, the previously stated $\sum_j^{n-i} m_j$ will be equal to $n - |c_1| = n - m_1$. Therefore, the running time of the function is $m_1 * (n - m_1)$
+
+Since every cluster is initialized to have one element, we know that $m_1 > 0$, and $n - m_1 < n$. Then, since $m_1$ is also $< n$, the running time $m_1 * (n - m_1)$ is bounded by $\cO(n^2)$.
 
 \item[(c)]
-TODO: Write your answer here.
+Running Time Analysis for \texttt{find\_clusters\_random}:
+
+Let $n$ be the number of vertices of graph, and let $k$ be the value of \texttt{num\_clusters}.
+
+In the worst case scenario: Since the outer loop iterates over a range from $0$ to $n - k$, it iterates $n - k$ times. For each iteration, the inner loop have a running time of $\cO(n^2)$ as previously analyzed. Besides from the inner loop, other statements inside the outer loop includes constant-time operations print, f-string creation, \texttt{random.choice}, and varaible assignment. After that, all elements in the set $c_1$ are added to \texttt{best\_c2}, which has a worst-case running time of $\cO(n)$ because $|c_1| <= n$. Also, $c_1$ is removed from the list \texttt{clusters}, which also has a worst-case running time of $\cO(n)$ because \texttt{len(clusters)} $<= n$. Combining all of these operations, the running time of one iteration of the outer loop will be $\in \cO(n^2)$, and the runninng time of $n - k$ iterations will be $\in \cO(n^2 \cdot (n - k))$.
+
+Outside the outer loop, there is only a return statement (constant-time) and a list comprehension that initializes the \texttt{clusters} array, which goes through $n$ iterations, executing a constant-time operation of creating a set for each iteration.
+
+Therefore, the running time of the entire function would be $\in \cO(n^2 \cdot (n - k))$.
 
 \item[(d)]
 \emph{Not to be handed in.}
